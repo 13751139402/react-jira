@@ -1,27 +1,30 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect, useState } from "react";
 
-export const isFalse = (value) => (value === 0 ? false : !value);
+export const isFalse = (value: unknown) => (value === 0 ? false : !value);
 
-export const cleanObject = (object) => {
+export const cleanObject = (object: object) => {
   const result = { ...object };
   Object.keys(result).forEach((key) => {
+    // @ts-ignore
     const value = result[key];
     if (!value) {
+      // @ts-ignore
       delete result[key];
     }
   });
   return result;
 };
 // 在页面刚进来的时候执行一次
-export const useMount = (callback) => {
+export const useMount = (callback: () => void) => {
   // 函数名改为mount eslint会报错,hook只能在组件或者其他hook内运行,custom hook都为use开头
   useEffect(() => {
     callback && callback();
-  });
+  }, []); // []表示useEffect只执行一次,effect会监听state和setState
 };
 
-export const debounce = (func, delay) => {
-  let timeout;
+export const debounce = (func: () => {}, delay: number) => {
+  let timeout: NodeJS.Timeout;
   return () => {
     if (timeout) {
       clearTimeout(timeout);
@@ -32,7 +35,7 @@ export const debounce = (func, delay) => {
   };
 };
 
-export const useDebounce = (value, delay) => {
+export const useDebounce = (value: any, delay: number) => {
   const [debounceValue, setDebounceValue] = useState(value); // 设置一个state
 
   useEffect(() => {

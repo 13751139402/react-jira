@@ -12,16 +12,17 @@ export const ProjectListScreen = () => {
   });
   const [list, setList] = useState([]);
   const [users, setUsers] = useState([]);
-  useDebounce(() => {
-    // 相当于vue的watch,当[param]发生改变时触发,去发送请求同步表单
+  const debounceParam = useDebounce(param, 1000);
+  useEffect(() => {
+    // 相当于vue的watch,当[debounceParam]发生改变时触发,去发送请求同步表单
     // 初始化时也会执行一次
-    fetch(`${apiUrl}/projects?${qs.stringify(cleanObject(param))}`).then(async (response) => {
+    fetch(`${apiUrl}/projects?${qs.stringify(cleanObject(debounceParam))}`).then(async (response) => {
       if (response.ok) {
         setList(await response.json());
       }
     });
-  }, [param]); // 第二个参数,只有当列表内的value发生变化时才触发第一个参数
-  
+  }, [debounceParam]); // 第二个参数,只有当列表内的value发生变化时才触发第一个参数
+
   useMount(() => {
     fetch(`${apiUrl}/users`).then(async (response) => {
       if (response.ok) {
