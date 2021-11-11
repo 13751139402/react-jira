@@ -35,7 +35,7 @@ export const debounce = (func: () => {}, delay: number) => {
   };
 };
 
-export const useDebounce = (value: any, delay: number) => {
+export const useDebounce = <T>(value: T, delay: number) => {
   const [debounceValue, setDebounceValue] = useState(value); // 设置一个state
 
   useEffect(() => {
