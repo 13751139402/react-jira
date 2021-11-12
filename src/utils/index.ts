@@ -16,11 +16,12 @@ export const cleanObject = (object: object) => {
   return result;
 };
 // 在页面刚进来的时候执行一次
+// state改变=》页面更新=》触发所有的effect销毁函数=》触发所有的effect函数
 export const useMount = (callback: () => void) => {
   // 函数名改为mount eslint会报错,hook只能在组件或者其他hook内运行,custom hook都为use开头
   useEffect(() => {
     callback && callback();
-  }, []); // []表示useEffect只执行一次,effect会监听state和setState
+  }, []); // []表示useEffect只在组件初始化时执行一次,组件销毁时执行销毁函数.[]内有参数，则当参数改变时才触发effect
 };
 
 export const debounce = (func: () => {}, delay: number) => {
@@ -45,4 +46,24 @@ export const useDebounce = <T>(value: T, delay: number) => {
     return () => clearTimeout(timeout);
   }, [value, delay]);
   return debounceValue;
+};
+export const useArray = <T>(initialArray: T[]) => {
+  const [value, setValue] = useState(initialArray);
+  const clear = () => {
+    setValue([]);
+  };
+  const removeIndex = (index: number) => {
+    const newList = [...value];
+    newList.splice(index, 1);
+    setValue(newList);
+  };
+  const add = (item: T) => {
+    setValue([item, ...value]);
+  };
+  return {
+    clear,
+    removeIndex,
+    add,
+    value: value,
+  };
 };
