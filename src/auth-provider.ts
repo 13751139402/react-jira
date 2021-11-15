@@ -24,6 +24,8 @@ export const login = (data: { username: string; password: string }) => {
   }).then(async (response) => {
     if (response.ok) {
       return handleUserResponse(await response.json());
+    } else {
+      return Promise.reject(data);
     }
   });
 };
@@ -38,8 +40,10 @@ export const register = (data: { username: string; password: string }) => {
   }).then(async (response) => {
     if (response.ok) {
       return handleUserResponse(await response.json());
+    } else {
+      return Promise.reject(data);
     }
   });
 };
 
-export const logout = () => window.localStorage.removeItem(localStorage);
+export const logout = async () => window.localStorage.removeItem(localStorage);
