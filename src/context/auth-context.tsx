@@ -1,10 +1,23 @@
-import React, { ReactNode, useState } from "react";
+import React, { ReactNode, useState, ProviderProps } from "react";
 import * as auth from "auth-provider";
 import { User } from "screens/project-list/search-pannel";
+import { http } from "utils/http";
+import { useMount } from "utils";
+
 interface AuthForm {
   username: string;
   password: string;
 }
+// bootstrap是初始化的意思
+const bootstrapUser = async () => {
+  let user = null;
+  const token = auth.getToken();
+  if (token) {
+    const data = await http("me", { token });
+    user = data.user;
+    return user;
+  }
+};
 
 // Context 可以让我们无须明确地传遍每一个组件，就能将值深入传递进组件树。
 // createContext会创建一个Context对象,对象中包含了Provider组件函数
@@ -29,6 +42,11 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const login = (form: AuthForm) => auth.login(form).then(setUser);
   const register = (form: AuthForm) => auth.register(form).then(setUser);
   const logout = () => auth.logout().then(() => setUser(null));
+
+  useMount(() => {
+    bootstrapUser().then(setUser);
+  });
+
   // 挂载Provider时传入value和children
   // 当children组件使用login,register和logout时会触发setUser,改变user值重新渲染页面
   return <AuthContext.Provider value={{ user, login, register, logout }}>{children}</AuthContext.Provider>;

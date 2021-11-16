@@ -2,8 +2,7 @@ import { SearchPannel } from "./search-pannel";
 import { List } from "./list";
 import { useEffect, useState } from "react";
 import { cleanObject, useMount, useDebounce } from "utils";
-import qs from "qs";
-const apiUrl = process.env.REACT_APP_API_URL;
+import { useHttp } from "utils/http";
 export const ProjectListScreen = () => {
   const [param, setParam] = useState({
     // hook写法
@@ -13,22 +12,14 @@ export const ProjectListScreen = () => {
   const [list, setList] = useState([]);
   const [users, setUsers] = useState([]);
   const debounceParam = useDebounce(param, 1000);
+  const client = useHttp();
+
   useEffect(() => {
-    // 相当于vue的watch,当[debounceParam]发生改变时触发,去发送请求同步表单
-    // 初始化时也会执行一次
-    fetch(`${apiUrl}/projects?${qs.stringify(cleanObject(debounceParam))}`).then(async (response) => {
-      if (response.ok) {
-        setList(await response.json());
-      }
-    });
+    client("projects", { data: cleanObject(debounceParam) }).then(setList);
   }, [debounceParam]); // 第二个参数,只有当列表内的value发生变化时才触发第一个参数
 
   useMount(() => {
-    fetch(`${apiUrl}/users`).then(async (response) => {
-      if (response.ok) {
-        setUsers(await response.json());
-      }
-    });
+    client("users").then(setUsers);
   }); // []表示useEffect只执行一次
   return (
     <div>
