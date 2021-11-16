@@ -4,13 +4,14 @@ import "./index.css";
 import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 import { loadDevTools } from "jira-dev-tool";
-import { AppProviders } from "context";
+import { AuthProvider } from "context";
 loadDevTools(() => {
   ReactDOM.render(
     <React.StrictMode>
-      <AppProviders>
+      {/* 订阅context */}
+      <AuthProvider>
         <App />
-      </AppProviders>
+      </AuthProvider>
     </React.StrictMode>,
     document.getElementById("root")
   );
