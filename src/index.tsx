@@ -4,6 +4,7 @@ import "./index.css";
 import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 import { loadDevTools } from "jira-dev-tool";
+import "antd/dist/antd.less"; // 通过less的css变量自定义antd里面的主题
 import { AuthProvider } from "context";
 loadDevTools(() => {
   ReactDOM.render(

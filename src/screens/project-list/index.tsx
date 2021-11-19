@@ -16,7 +16,7 @@ export const ProjectListScreen = () => {
 
   useEffect(() => {
     client("projects", { data: cleanObject(debounceParam) }).then(setList);
-  }, [debounceParam]); // 第二个参数,只有当列表内的value发生变化时才触发第一个参数
+  }, [debounceParam, client]); // 第二个参数,只有当列表内的value发生变化时才触发第一个参数
 
   useMount(() => {
     client("users").then(setUsers);
