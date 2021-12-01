@@ -1,11 +1,11 @@
-import React, { FormEvent } from "react";
+import React from "react";
 import { useAuth } from "context/auth-context";
 import { Form, Input } from "antd";
 import { LongButton } from "./index";
 export const LoginScreen = () => {
-  const { register } = useAuth(); // 组件向上找到最近的provider是否为AuthContext,是则拿到context值user, login
+  const { login } = useAuth(); // 组件向上找到最近的provider是否为AuthContext,是则拿到context值user, login
   const handleSubmit = (values: { username: string; password: string }) => {
-    register(values);
+    login(values);
   };
   return (
     <Form onFinish={handleSubmit}>
