@@ -1,7 +1,7 @@
 import React, { FormEvent } from "react";
 import { useAuth } from "context/auth-context";
-import { Form, Input, Button } from "antd";
-
+import { Form, Input } from "antd";
+import { LongButton } from "./index";
 export const RegisterScreen = () => {
   const { register } = useAuth(); // 组件向上找到最近的provider是否为AuthContext,是则拿到context值user, login
   const handleSubmit = (values: { username: string; password: string }) => {
@@ -16,9 +16,9 @@ export const RegisterScreen = () => {
         <Input placeholder="密码" type="password" id="password" />
       </Form.Item>
       <Form.Item>
-        <Button htmlType="submit" type="primary">
+        <LongButton htmlType="submit" type="primary">
           注册
-        </Button>
+        </LongButton>
       </Form.Item>
     </Form>
   );
