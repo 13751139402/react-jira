@@ -1,5 +1,8 @@
+/* @jsxImportSource @emotion/react */
+// 指定本文件的编译器
+import { jsx } from "@emotion/react";
 import React from "react";
-
+import { Form } from "antd";
 export interface User {
   id: string;
   name: string;
@@ -20,8 +23,8 @@ interface SearchPanelProps {
 
 export const SearchPannel = ({ param, setParam, users }: SearchPanelProps) => {
   return (
-    <form>
-      <div>
+    <Form css={{ marginBottom: "2rem" }} layout={"inline"}>
+      <Form.Item>
         <input
           type="text"
           value={param.name}
@@ -32,23 +35,25 @@ export const SearchPannel = ({ param, setParam, users }: SearchPanelProps) => {
             })
           }
         />
-      </div>
-      <select
-        value={param.personId}
-        onChange={(evt) =>
-          setParam({
-            ...param,
-            personId: evt.target.value,
-          })
-        }
-      >
-        <option value={""}>负责人</option>
-        {users.map((user) => (
-          <option value={user.id} key={user.id}>
-            {user.name}
-          </option>
-        ))}
-      </select>
-    </form>
+      </Form.Item>
+      <Form.Item>
+        <select
+          value={param.personId}
+          onChange={(evt) =>
+            setParam({
+              ...param,
+              personId: evt.target.value,
+            })
+          }
+        >
+          <option value={""}>负责人</option>
+          {users.map((user) => (
+            <option value={user.id} key={user.id}>
+              {user.name}
+            </option>
+          ))}
+        </select>
+      </Form.Item>
+    </Form>
   );
 };

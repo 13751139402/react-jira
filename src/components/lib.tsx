@@ -1,5 +1,5 @@
 import styled from "@emotion/styled";
-export const Row = styled.div<{ gap: Number | Boolean; between: Boolean; marginBottom: Number | Boolean }>`
+export const Row = styled.div<{ gap?: Number | Boolean; between?: Boolean; marginBottom?: Number | Boolean }>`
   display: flex;
   align-items: center;
   justify-content: ${(props) => (props.between ? "space-between" : undefined)};

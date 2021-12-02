@@ -3,6 +3,7 @@ import { List } from "./list";
 import { useEffect, useState } from "react";
 import { cleanObject, useMount, useDebounce } from "utils";
 import { useHttp } from "utils/http";
+import styled from "@emotion/styled";
 export const ProjectListScreen = () => {
   const [param, setParam] = useState({
     // hook写法
@@ -22,9 +23,13 @@ export const ProjectListScreen = () => {
     client("users").then(setUsers);
   }); // []表示useEffect只执行一次
   return (
-    <div>
+    <Container>
       <SearchPannel param={param} setParam={setParam} users={users} />
       <List list={list} users={users} />
-    </div>
+    </Container>
   );
 };
+
+const Container = styled.div`
+  padding: 3.2rem;
+`;

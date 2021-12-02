@@ -3,7 +3,7 @@ import { RegisterScreen } from "unauthenticated-app/register";
 import { LoginScreen } from "unauthenticated-app/login";
 import { Card, Divider, Button } from "antd";
 import styled from "@emotion/styled";
-import logo from "assets/logo.svg";
+// import logo from "assets/logo.svg";
 import left from "assets/left.svg";
 import right from "assets/right.svg";
 
@@ -44,7 +44,6 @@ const Background = styled.div`
 `;
 
 const Header = styled.header`
-  background: url(${logo}) no-repeat center;
   padding: 5rem 0;
   background-size: 20rem;
   width: 100%;
