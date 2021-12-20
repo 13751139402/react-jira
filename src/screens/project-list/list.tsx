@@ -1,6 +1,6 @@
 import React from "react"; // 即时没有使用React但是一定要引入,因为babel会把jsx编译成需要使用React的代码
 import { User } from "./search-pannel";
-import { Table } from "antd";
+import { Table, TableProps } from "antd";
 import dayjs from "dayjs";
 export interface Project {
   id: string;
@@ -11,12 +11,12 @@ export interface Project {
   created: number;
 }
 
-interface ListProps {
-  list: Project[];
+interface ListProps extends TableProps<any> {
   users: User[];
 }
 
-export const List = ({ list, users }: ListProps) => {
+// ListProps去掉users就等于TableProps,res为TableProps类型。所以解开对象为Table的属性不会报错
+export const List = ({ users, ...props }: ListProps) => {
   return (
     <Table
       rowKey="id"
@@ -44,7 +44,7 @@ export const List = ({ list, users }: ListProps) => {
           },
         },
       ]}
-      dataSource={list}
+      {...props}
     ></Table>
   );
 };
