@@ -1,6 +1,5 @@
 /* @jsxImportSource @emotion/react */
 // 指定本文件的编译器
-import { jsx } from "@emotion/react";
 import React from "react";
 import { Form } from "antd";
 export interface User {

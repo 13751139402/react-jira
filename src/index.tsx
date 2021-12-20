@@ -2,16 +2,17 @@ import React from "react";
 import ReactDOM from "react-dom";
 import App from "./App";
 import reportWebVitals from "./reportWebVitals";
-import { loadDevTools } from "jira-dev-tool";
+import { loadServer, DevTools } from "jira-dev-tool";
 import "antd/dist/antd.less"; // 通过less的css变量自定义antd里面的主题
-import { AuthProvider } from "context";
-loadDevTools(() => {
+import { AppProviders } from "context";
+loadServer(() => {
   ReactDOM.render(
     <React.StrictMode>
       {/* 订阅context */}
-      <AuthProvider>
+      <AppProviders>
+        <DevTools />
         <App />
-      </AuthProvider>
+      </AppProviders>
     </React.StrictMode>,
     document.getElementById("root")
   );

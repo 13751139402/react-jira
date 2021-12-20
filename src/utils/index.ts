@@ -3,13 +3,23 @@ import { useEffect, useState } from "react";
 
 export const isFalse = (value: unknown) => (value === 0 ? false : !value);
 
-export const cleanObject = (object: object) => {
+export const isVoid = (value: unknown) => value === undefined || value === null || value === "";
+// ts的object类型包括对象和函数,函数是没有属性的,所以ts检测object判定为空对象
+// 此时result[key]就等于在空对象中找属性,ts会判定报错
+// let a: object;
+// a = { name: "jack" };
+// a = () => {};
+// a = new RegExp("");
+
+// let b:{[key:string]:unknown}
+// b={name:'Jack'}
+// b=()=>{}
+// 在一个函数里,改变传入的对象本身是不好的
+export const cleanObject = (object: { [key: string]: unknown }) => {
   const result = { ...object };
   Object.keys(result).forEach((key) => {
-    // @ts-ignore
     const value = result[key];
-    if (!value) {
-      // @ts-ignore
+    if (isVoid(value)) {
       delete result[key];
     }
   });

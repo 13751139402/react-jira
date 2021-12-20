@@ -28,8 +28,6 @@ function Toolbar() {
 
 function Button() {
   const context = React.useContext(ThemeContext);
-  console.log("Button", context);
-
   return <div>{context}</div>;
 }
 
