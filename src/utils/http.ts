@@ -33,7 +33,7 @@ export const http = async (endpoint: String, { data, token, headers, ...customCo
     if (response.ok) {
       return data;
     } else {
-      return Promise.reject(data);
+      return Promise.reject(await response.json());
     }
   });
 };

@@ -2,18 +2,29 @@ import React from "react";
 import { useAuth } from "context/auth-context";
 import { Form, Input } from "antd";
 import { LongButton } from "./index";
-export const RegisterScreen = () => {
+export const RegisterScreen = ({ onError }: { onError: (error: Error) => void }) => {
   const { register } = useAuth(); // 组件向上找到最近的provider是否为AuthContext,是则拿到context值user, login
-  const handleSubmit = (values: { username: string; password: string }) => {
-    register(values);
+  const handleSubmit = async ({ cpassword, ...values }: { username: string; password: string; cpassword: string }) => {
+    if (cpassword !== values.password) {
+      onError(new Error("请确认两次输入密码相同"));
+      return;
+    }
+    try {
+      await register(values);
+    } catch (e) {
+      onError(e as Error);
+    }
   };
   return (
     <Form onFinish={handleSubmit}>
       <Form.Item name={"username"} rules={[{ required: true, message: "请输入用户名" }]}>
         <Input placeholder="用户名" type="text" id="username" />
       </Form.Item>
-      <Form.Item rules={[{ required: true, message: "请输入密码" }]}>
+      <Form.Item name={"password"} rules={[{ required: true, message: "请输入密码" }]}>
         <Input placeholder="密码" type="password" id="password" />
+      </Form.Item>
+      <Form.Item name={"cpassword"} rules={[{ required: true, message: "请确认密码" }]}>
+        <Input placeholder="确认密码" type="password" id="cpassword" />
       </Form.Item>
       <Form.Item>
         <LongButton htmlType="submit" type="primary">
