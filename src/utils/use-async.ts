@@ -17,13 +17,13 @@ const defaultInitialState: State<null> = {
 const defaultConfig = {
   throwOnError: false,
 };
+// run就是传入一个promise,控制loading,error等state。pormise返回的值会被data接受,setUser作为params来触发hook
 export const useAsync = <D>(initialState?: State<D>, initialConfig?: typeof defaultConfig) => {
-  const config = { ...defaultConfig, initialConfig };
+  const config = { ...defaultConfig, ...initialConfig };
   const [state, setState] = useState<State<D>>({
     ...defaultInitialState,
     ...initialState,
   });
-
   const setData = (data: D) =>
     setState({
       data,
@@ -33,7 +33,7 @@ export const useAsync = <D>(initialState?: State<D>, initialConfig?: typeof defa
   const setError = (error: Error) =>
     setState({
       data: null,
-      stat: "success",
+      stat: "error",
       error,
     });
   // run用来触发异步请求
@@ -49,7 +49,10 @@ export const useAsync = <D>(initialState?: State<D>, initialConfig?: typeof defa
       })
       .catch((error) => {
         setError(error);
+
         if (config.throwOnError) {
+          console.log("config.throwOnErrorconfig被触发");
+
           // catch会消化异常，如果不主动抛出，外面是接受不到异常的。得Promise.reject
           return Promise.reject(error);
         }

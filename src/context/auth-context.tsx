@@ -1,9 +1,10 @@
-import React, { ReactNode, useState } from "react";
+import React, { ReactNode } from "react";
 import * as auth from "auth-provider";
 import { User } from "screens/project-list/search-pannel";
 import { http } from "utils/http";
 import { useMount } from "utils";
-
+import { useAsync } from "utils/use-async";
+import { FullPageLoading, FullPageErrorFallback } from "components/lib";
 interface AuthForm {
   username: string;
   password: string;
@@ -34,24 +35,6 @@ const AuthContext = React.createContext<
 >(undefined);
 AuthContext.displayName = "AuthContext"; // React DevTools中的Provider名称
 
-// children就是Vue中的slot
-export const AuthProvider = ({ children }: { children: ReactNode }) => {
-  const [user, setUser] = useState<User | null>(null); // 创建一个响应式数据
-  // 函数式编程 消参
-  // 原代码 const login = (form: AuthForm) => auth.login(form).then((user) => setUser(user));
-  const login = (form: AuthForm) => auth.login(form).then(setUser);
-  const register = (form: AuthForm) => auth.register(form).then(setUser);
-  const logout = () => auth.logout().then(() => setUser(null));
-
-  useMount(() => {
-    bootstrapUser().then(setUser);
-  });
-
-  // 挂载Provider时传入value和children
-  // 当children组件使用login,register和logout时会触发setUser,改变user值重新渲染页面
-  return <AuthContext.Provider value={{ user, login, register, logout }}>{children}</AuthContext.Provider>;
-};
-
 export const useAuth = () => {
   // 返回当前的context值
   const context = React.useContext(AuthContext);
@@ -60,4 +43,29 @@ export const useAuth = () => {
     throw new Error("useAuth必须在AuthProvider中使用");
   }
   return context;
+};
+
+// children就是Vue中的slot
+export const AuthProvider = ({ children }: { children: ReactNode }) => {
+  const { data: user, isLoading, isIdle, run, setData: setUser, isError, error } = useAsync<User | null>(undefined, { throwOnError: true });
+  // 函数式编程 消参
+  // 原代码 const login = (form: AuthForm) => auth.login(form).then((user) => setUser(user));
+  const login = (form: AuthForm) => auth.login(form).then(setUser);
+  const register = (form: AuthForm) => auth.register(form).then(setUser);
+  const logout = () => auth.logout().then(() => setUser(null));
+
+  useMount(() => {
+    run(bootstrapUser());
+  });
+  if (isIdle || isLoading) {
+    return <FullPageLoading />;
+  }
+  console.log(isError);
+
+  if (isError) {
+    return <FullPageErrorFallback error={error}></FullPageErrorFallback>;
+  }
+  // 挂载Provider时传入value和children
+  // 当children组件使用login,register和logout时会触发setUser,改变user值重新渲染页面
+  return <AuthContext.Provider value={{ user, login, register, logout }}>{children}</AuthContext.Provider>;
 };
