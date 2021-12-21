@@ -18,7 +18,10 @@ export const http = async (endpoint: String, { data, token, headers, ...customCo
   };
 
   if (config.method.toUpperCase() === "GET") {
-    endpoint += `?${qs.stringify(data)}`;
+    const query = qs.stringify(data);
+    console.log("query", query);
+
+    endpoint += query ? `?${qs.stringify(data)}` : "";
   } else {
     config.body = JSON.stringify(data || {});
   }
