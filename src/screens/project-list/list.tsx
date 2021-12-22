@@ -2,6 +2,15 @@ import React from "react"; // 即时没有使用React但是一定要引入,因�
 import { User } from "./search-pannel";
 import { Table, TableProps } from "antd";
 import dayjs from "dayjs";
+// react-router 和 react-router-dom的关系，类似于react和react-dom/react-native/react-vr...
+// react是核心库，主要处理虚拟的，计算的，理论的逻辑。类似于组件中的状态,useEffect的状态,新旧vnode树计算
+// react-dom生活在浏览器环境里，里面充满了dom操作，只能在浏览器中消费react计算的结果
+// react-native生活在ios/安卓环境消费react运算的结果
+// react-vr生活在vr环境消费react运算的结果
+// ================================================================================
+// react-router主要管理计算逻辑结果,计算结果丢给react-router-dom来消费，也可以用react-router-native在ios/安卓环境消费
+// Link要创建a标签，处理a标签的点击时间，和宿主环境（浏览器）强关联。所以要从dom库中引用
+import { Link } from "react-router-dom";
 export interface Project {
   id: string;
   name: string;
@@ -24,8 +33,10 @@ export const List = ({ users, ...props }: ListProps) => {
       columns={[
         {
           title: "名称",
-          dataIndex: "name",
           sorter: (a, b) => a.name.localeCompare(b.name),
+          render(value, project) {
+            return <Link to={String(project.id)}>{project.name}</Link>;
+          },
         },
         {
           title: "部门",
