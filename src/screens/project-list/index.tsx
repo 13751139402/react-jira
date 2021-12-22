@@ -6,7 +6,6 @@ import { useProject } from "utils/project";
 import styled from "@emotion/styled";
 import { Typography } from "antd";
 import { useUsers } from "utils/user";
-import { Test } from "./test-closure";
 export const ProjectListScreen = () => {
   const [param, setParam] = useState({
     // hook写法
@@ -22,11 +21,10 @@ export const ProjectListScreen = () => {
   // input改变时会setParam改变param
   // custom-hook就是传state进去，进行逻辑处理，再导出state。形成一个独立的业务，但是通过state又可以与外部响应式
 
-  useDocumentTitle("项目列表", false);
+  // useDocumentTitle("项目列表", false);
 
   return (
     <Container>
-      <Test></Test>
       <h1>项目列表</h1>
       <SearchPannel param={param} setParam={setParam} users={users || []} />
       {error ? <Typography.Text type="danger">{error.message}</Typography.Text> : ""}

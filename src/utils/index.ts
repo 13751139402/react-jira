@@ -98,3 +98,5 @@ export const useDocumentTitle = (title: string, keepOnUnmount: boolean = true) =
     };
   }, [oldTitle, keepOnUnmount]); // 空数组的话返回函数会在组件卸载时触发
 };
+
+export const resetRoute = () => (window.location.href = window.location.origin);

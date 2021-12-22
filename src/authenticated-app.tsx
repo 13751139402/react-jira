@@ -8,6 +8,7 @@ import { Row } from "./components/lib";
 import { Dropdown, Menu, Button } from "antd";
 import { Navigate, Route, Routes } from "react-router";
 import { BrowserRouter as Router } from "react-router-dom";
+import { resetRoute } from "utils";
 /**
  * grid和flex各自的应用场景
  * 1.要考虑，是一维布局 还是 二维部剧
@@ -23,12 +24,13 @@ export const AuthenticatedApp = () => {
     <Container>
       <PageHeader />
       <Main>
-        <ProjectListScreen></ProjectListScreen>
         <Router>
           <Routes>
-            <Route path={"/projects"} element={<ProjectListScreen />}></Route>
-            <Route path={"/projects/:projectId/*"} element={<ProjectScreen />}></Route>
-          </Routes>{" "}
+            <Route path={"/projects"} element={<ProjectListScreen />} />
+            <Route path={"/projects/:projectId/*"} element={<ProjectScreen />} />
+          </Routes>
+          {/* 默认路由 */}
+          {/* <Navigate to={"/projects"} /> */}
         </Router>
       </Main>
     </Container>
@@ -39,7 +41,9 @@ const PageHeader = () => {
   return (
     <Header>
       <HeaderLeft gap={true} between={true}>
-        <SoftwareLogo width="18rem" color={"rgb(38,132,255)"} />
+        <Button type="link" onClick={resetRoute}>
+          <SoftwareLogo width="18rem" color={"rgb(38,132,255)"} />
+        </Button>
         <h2>项目</h2>
         <h2>用户</h2>
       </HeaderLeft>
