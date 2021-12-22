@@ -77,3 +77,21 @@ export const useArray = <T>(initialArray: T[]) => {
     value: value,
   };
 };
+
+export const useDocumentTitle = (title: string, keepOnUnmount: boolean = true) => {
+  const oldTitle = document.title;
+  console.log("oldTitle:", oldTitle);
+
+  // 当title改变时更新document.title
+  useEffect(() => {
+    document.title = title;
+  }, [title]);
+
+  useEffect(() => {
+    return () => {
+      if (!keepOnUnmount) {
+        document.title = oldTitle;
+      }
+    };
+  }, []); // 空数组会在组件卸载时触发
+};
