@@ -6,6 +6,7 @@ import { useProject } from "utils/project";
 import styled from "@emotion/styled";
 import { Typography } from "antd";
 import { useUsers } from "utils/user";
+import { Test } from "./test-closure";
 export const ProjectListScreen = () => {
   const [param, setParam] = useState({
     // hook写法
@@ -25,6 +26,7 @@ export const ProjectListScreen = () => {
 
   return (
     <Container>
+      <Test></Test>
       <h1>项目列表</h1>
       <SearchPannel param={param} setParam={setParam} users={users || []} />
       {error ? <Typography.Text type="danger">{error.message}</Typography.Text> : ""}

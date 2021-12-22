@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 export const isFalse = (value: unknown) => (value === 0 ? false : !value);
 
@@ -79,7 +79,10 @@ export const useArray = <T>(initialArray: T[]) => {
 };
 
 export const useDocumentTitle = (title: string, keepOnUnmount: boolean = true) => {
-  const oldTitle = document.title;
+  // useRef返回一个可变的ref对象，其.current属性被初始化为传入的参数（initialValue）
+  // 返回的ref对象在组件的整个生命周期内保持不变
+  // 组件mount时初始化后在整个生命周期内保持不变
+  const oldTitle = useRef(document.title).current;
   console.log("oldTitle:", oldTitle);
 
   // 当title改变时更新document.title
@@ -93,5 +96,5 @@ export const useDocumentTitle = (title: string, keepOnUnmount: boolean = true) =
         document.title = oldTitle;
       }
     };
-  }, []); // 空数组会在组件卸载时触发
+  }, [oldTitle, keepOnUnmount]); // 空数组的话返回函数会在组件卸载时触发
 };
