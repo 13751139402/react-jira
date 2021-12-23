@@ -2,8 +2,10 @@
 // 指定本文件的编译器
 import React from "react";
 import { Form } from "antd";
+import { Project } from "./list";
+import { UserSelect } from "components/user-select";
 export interface User {
-  id: string;
+  id: number;
   name: string;
   email: string;
   title: string;
@@ -13,10 +15,7 @@ export interface User {
 
 interface SearchPanelProps {
   users: User[];
-  param: {
-    name: string;
-    personId: string;
-  };
+  param: Partial<Pick<Project, "name" | "personId">>;
   setParam: (param: SearchPanelProps["param"]) => void;
 }
 
@@ -36,22 +35,16 @@ export const SearchPannel = ({ param, setParam, users }: SearchPanelProps) => {
         />
       </Form.Item>
       <Form.Item>
-        <select
+        <UserSelect
+          defaultOptionName="负责人"
           value={param.personId}
-          onChange={(evt) =>
+          onChange={(value) =>
             setParam({
               ...param,
-              personId: evt.target.value,
+              personId: value,
             })
           }
-        >
-          <option value={""}>负责人</option>
-          {users.map((user) => (
-            <option value={user.id} key={user.id}>
-              {user.name}
-            </option>
-          ))}
-        </select>
+        ></UserSelect>
       </Form.Item>
     </Form>
   );
