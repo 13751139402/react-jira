@@ -83,7 +83,6 @@ export const useDocumentTitle = (title: string, keepOnUnmount: boolean = true) =
   // 返回的ref对象在组件的整个生命周期内保持不变
   // 组件mount时初始化后在整个生命周期内保持不变
   const oldTitle = useRef(document.title).current;
-  console.log("oldTitle:", oldTitle);
 
   // 当title改变时更新document.title
   useEffect(() => {

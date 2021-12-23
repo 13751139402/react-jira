@@ -60,7 +60,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   if (isIdle || isLoading) {
     return <FullPageLoading />;
   }
-  console.log(isError);
 
   if (isError) {
     return <FullPageErrorFallback error={error}></FullPageErrorFallback>;

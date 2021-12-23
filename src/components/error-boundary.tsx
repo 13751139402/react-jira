@@ -10,16 +10,12 @@ export class ErrorBoundary extends React.Component<React.PropsWithChildren<{ fal
 
   // 当子组件抛出异常被ErrorBoundary捕获时，getDerivedStateFormError调用并返回值给state
   static getDerivedStateFromError(error: Error) {
-    console.log("getDerivedStateFromError");
-
     return { error };
   }
 
   render() {
     const { error } = this.state;
     const { fallbackRender, children } = this.props;
-    console.log("this.state.error:", error);
-
     if (error) {
       return fallbackRender({ error });
     }

@@ -6,13 +6,16 @@ import { useProject } from "utils/project";
 import styled from "@emotion/styled";
 import { Typography } from "antd";
 import { useUsers } from "utils/user";
+import { useUrlQueryParam } from "utils/url";
 export const ProjectListScreen = () => {
-  const [param, setParam] = useState({
+  const [, setParam] = useState({
     // hook写法
     name: "",
     personId: "",
   });
   // 每次页面渲染时会重新触发ProjectListScreen,但是effect只有初次渲染或者params改变才执行
+  const [param] = useUrlQueryParam(["name", "personId"]);
+
   const debounceParam = useDebounce(param, 1000);
   const { error, data: list } = useProject(debounceParam);
   const { data: users } = useUsers();
@@ -32,6 +35,8 @@ export const ProjectListScreen = () => {
     </Container>
   );
 };
+
+ProjectListScreen.whyDidYouRender = true;
 
 const Container = styled.div`
   padding: 3.2rem;

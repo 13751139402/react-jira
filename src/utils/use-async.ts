@@ -51,8 +51,6 @@ export const useAsync = <D>(initialState?: State<D>, initialConfig?: typeof defa
         setError(error);
 
         if (config.throwOnError) {
-          console.log("config.throwOnErrorconfig被触发");
-
           // catch会消化异常，如果不主动抛出，外面是接受不到异常的。得Promise.reject
           return Promise.reject(error);
         }
