@@ -13,7 +13,6 @@ export default function App() {
   // 2.useEffect对比新旧obj,发现不是两个相同的函数，调用Effect
   // 3.又触发setNum=》渲染函数，进入下一个循环
   useEffect(() => {
-    console.log("effect");
     setNum(num + 1);
     // 基本类型，可以放在依赖里；组件状态，可以放在依赖里； 非组件状态的对象，绝不可以放到依赖里
     // eslint-disable-next-line react-hooks/exhaustive-deps
