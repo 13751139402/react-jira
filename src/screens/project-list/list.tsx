@@ -2,6 +2,7 @@ import React from "react"; // 即时没有使用React但是一定要引入,因�
 import { User } from "./search-pannel";
 import { Table, TableProps } from "antd";
 import dayjs from "dayjs";
+import { Pin } from "components/pin";
 // react-router 和 react-router-dom的关系，类似于react和react-dom/react-native/react-vr...
 // react是核心库，主要处理虚拟的，计算的，理论的逻辑。类似于组件中的状态,useEffect的状态,新旧vnode树计算
 // react-dom生活在浏览器环境里，里面充满了dom操作，只能在浏览器中消费react计算的结果
@@ -11,6 +12,7 @@ import dayjs from "dayjs";
 // react-router主要管理计算逻辑结果,计算结果丢给react-router-dom来消费，也可以用react-router-native在ios/安卓环境消费
 // Link要创建a标签，处理a标签的点击时间，和宿主环境（浏览器）强关联。所以要从dom库中引用
 import { Link } from "react-router-dom";
+import { useEditProject } from "utils/project";
 export interface Project {
   id: number;
   name: string;
@@ -26,11 +28,20 @@ interface ListProps extends TableProps<any> {
 
 // ListProps去掉users就等于TableProps,res为TableProps类型。所以解开对象为Table的属性不会报错
 export const List = ({ users, ...props }: ListProps) => {
+  // hook只能放在函数组件顶部，返回值作为事件函数
+  const { mutate } = useEditProject();
+  const pinProject = (id: number) => (pin: boolean) => mutate({ id: id, pin: true });
   return (
     <Table
       rowKey="id"
       pagination={false}
       columns={[
+        {
+          title: <Pin checked={true} disabled={true} />,
+          render(value, project) {
+            return <Pin checked={project.pin} onCheckedChange={pinProject(project.id)} />;
+          },
+        },
         {
           title: "名称",
           sorter: (a, b) => a.name.localeCompare(b.name),

@@ -43,5 +43,6 @@ export const useHttp = () => {
   const { user } = useAuth(); // 发送接口时,从http中拿到user
   // Parameters会把http函数的参数数组的类型拿出来
   // useCallback在页面渲染时告诉react这个变量不需要重新声明，防止useEffect死循环
-  return useCallback((...[endpoint, config]: Parameters<typeof http>) => http(endpoint, { ...config, token: user?.token }), [user?.token]);
+  type httpParams = Parameters<typeof http>;
+  return useCallback((...[endpoint, config]: httpParams) => http(endpoint, { ...config, token: user?.token }), [user?.token]);
 };
