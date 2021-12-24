@@ -24,6 +24,12 @@ export const useAsync = <D>(initialState?: State<D>, initialConfig?: typeof defa
     ...defaultInitialState,
     ...initialState,
   });
+  // useState直接传入函数的含义是：惰性初始化；所以，要用useState保存函数，不能直接传入函数
+  // https://codesandbox.io/s/blissful-water-230u4?file=/src/App.js
+  // 惰性初始化会在页面mount时执行函数参数，把返回值当成State的值;在setRetry时也会执行函数参数
+  // const [retry, setRetry] = useState(() => {});
+  const [retry, setRetry] = useState(() => () => {});
+  // let retry=()=>{} 不能这样写的原因是，每次页面渲染这个函数都会重复执行，所以let retry=()=>{}就会被覆盖，达不到保存promise的效果
   const setData = (data: D) =>
     setState({
       data,
@@ -37,10 +43,17 @@ export const useAsync = <D>(initialState?: State<D>, initialConfig?: typeof defa
       error,
     });
   // run用来触发异步请求
-  const run = (promises: Promise<D>) => {
+  const run = (promises: Promise<D>, runConfig?: { retry: () => Promise<D> }) => {
     if (!promises || !promises.then) {
       throw new Error("请传入Promise类型数据");
     }
+    // 因为setRetry传入函数是惰性加载,会直接执行run,run又setRetry。无限循环
+    // setRetry(() => run(promises));
+    setRetry(() => () => {
+      if (runConfig?.retry) {
+        run(runConfig.retry(), runConfig);
+      }
+    });
     setState({ ...state, stat: "loading" });
     return promises
       .then((data) => {
@@ -65,6 +78,8 @@ export const useAsync = <D>(initialState?: State<D>, initialConfig?: typeof defa
     run,
     setData,
     setError,
+    // 当retry被调用时重新跑一遍run,让state刷新一遍
+    retry,
     ...state,
   };
 };

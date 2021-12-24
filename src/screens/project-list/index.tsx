@@ -3,7 +3,7 @@ import { List } from "./list";
 import { useDebounce, useDocumentTitle } from "utils";
 import { useProject } from "utils/project";
 import styled from "@emotion/styled";
-import { Typography } from "antd";
+import { Typography, Button } from "antd";
 import { useUsers } from "utils/user";
 import { useProjectsSearchParams } from "./util";
 // 基本类型，可以放到依赖里；组件状态，可以放到依赖里；非组件状态的对象，绝不可以放到依赖里
@@ -12,7 +12,7 @@ import { useProjectsSearchParams } from "./util";
 export const ProjectListScreen = () => {
   // 每次页面渲染时会重新触发ProjectListScreen,但是effect只有初次渲染或者params改变才执行
   const [param, setParam] = useProjectsSearchParams();
-  const { isLoading, error, data: list } = useProject(useDebounce(param, 1000));
+  const { isLoading, error, data: list, retry } = useProject(useDebounce(param, 1000));
   const { data: users } = useUsers();
 
   // 渲染函数监听了param，data,error 三者有变化的时候就触发ProjectListScreen渲染页面
@@ -21,9 +21,10 @@ export const ProjectListScreen = () => {
   return (
     <Container>
       <h1>项目列表</h1>
+      <Button onClick={retry}>retry</Button>
       <SearchPannel param={param} setParam={setParam} users={users || []} />
       {error ? <Typography.Text type="danger">{error.message}</Typography.Text> : ""}
-      <List loading={isLoading} dataSource={list || []} users={users || []} />
+      <List refresh={retry} loading={isLoading} dataSource={list || []} users={users || []} />
     </Container>
   );
 };

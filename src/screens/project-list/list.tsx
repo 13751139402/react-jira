@@ -24,13 +24,14 @@ export interface Project {
 
 interface ListProps extends TableProps<any> {
   users: User[];
+  refresh?: () => void;
 }
 
 // ListProps去掉users就等于TableProps,res为TableProps类型。所以解开对象为Table的属性不会报错
 export const List = ({ users, ...props }: ListProps) => {
   // hook只能放在函数组件顶部，返回值作为事件函数
   const { mutate } = useEditProject();
-  const pinProject = (id: number) => (pin: boolean) => mutate({ id: id, pin: true });
+  const pinProject = (id: number) => (pin: boolean) => mutate({ id: id, pin: pin }).then(props.refresh);
   return (
     <Table
       rowKey="id"
