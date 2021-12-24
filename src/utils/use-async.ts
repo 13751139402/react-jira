@@ -1,5 +1,7 @@
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import { useMountedRef } from "./url";
+// useCallback和useMemo都是为了处理引用类型的依赖存在的，限制为不要每次渲染时都重新创建
+// 使用函数则用useCallback，对象使用useMemo
 
 // 管理接口请求的custom-hook
 interface State<D> {
@@ -32,46 +34,57 @@ export const useAsync = <D>(initialState?: State<D>, initialConfig?: typeof defa
   // const [retry, setRetry] = useState(() => {});
   const [retry, setRetry] = useState(() => () => {});
   // let retry=()=>{} 不能这样写的原因是，每次页面渲染这个函数都会重复执行，所以let retry=()=>{}就会被覆盖，达不到保存promise的效果
-  const setData = (data: D) =>
-    setState({
-      data,
-      stat: "success",
-      error: null,
-    });
-  const setError = (error: Error) =>
-    setState({
-      data: null,
-      stat: "error",
-      error,
-    });
-  // run用来触发异步请求
-  const run = (promises: Promise<D>, runConfig?: { retry: () => Promise<D> }) => {
-    if (!promises || !promises.then) {
-      throw new Error("请传入Promise类型数据");
-    }
-    // 因为setRetry传入函数是惰性加载,会直接执行run,run又setRetry。无限循环
-    // setRetry(() => run(promises));
-    setRetry(() => () => {
-      if (runConfig?.retry) {
-        run(runConfig.retry(), runConfig);
+  const setData = useCallback(
+    (data: D) =>
+      setState({
+        data,
+        stat: "success",
+        error: null,
+      }),
+    []
+  );
+  const setError = useCallback(
+    (error: Error) =>
+      setState({
+        data: null,
+        stat: "error",
+        error,
+      }),
+    []
+  );
+  // run用来触发异步请求。每次页面渲染都会重新定义run,这里使用useCallback来包裹，当依赖项改变才重新定义run
+  const run = useCallback(
+    (promises: Promise<D>, runConfig?: { retry: () => Promise<D> }) => {
+      if (!promises || !promises.then) {
+        throw new Error("请传入Promise类型数据");
       }
-    });
-    setState({ ...state, stat: "loading" });
-    return promises
-      .then((data) => {
-        if (mountedRef.current) setData(data);
-        return data;
-      })
-      .catch((error) => {
-        setError(error);
-
-        if (config.throwOnError) {
-          // catch会消化异常，如果不主动抛出，外面是接受不到异常的。得Promise.reject
-          return Promise.reject(error);
+      // 因为setRetry传入函数是惰性加载,会直接执行run,run又setRetry。无限循环
+      // setRetry(() => run(promises));
+      setRetry(() => () => {
+        if (runConfig?.retry) {
+          run(runConfig.retry(), runConfig);
         }
-        return error;
       });
-  };
+      // setState的函数用法：prevState是此时此刻的state
+      setState((prevState) => ({ ...prevState, stat: "loading" }));
+      return promises
+        .then((data) => {
+          if (mountedRef.current) setData(data);
+          return data;
+        })
+        .catch((error) => {
+          setError(error);
+
+          if (config.throwOnError) {
+            // catch会消化异常，如果不主动抛出，外面是接受不到异常的。得Promise.reject
+            return Promise.reject(error);
+          }
+          return error;
+        });
+    },
+    [config.throwOnError, mountedRef, setState, setData, setError] // 只有当依赖项被改变时才会重新定义
+  );
+
   return {
     isIdle: state.stat === "idle",
     isLoading: state.stat === "loading",
