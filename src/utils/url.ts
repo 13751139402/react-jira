@@ -1,5 +1,5 @@
 import { URLSearchParamsInit, useSearchParams } from "react-router-dom";
-import { useMemo } from "react";
+import { useEffect, useMemo, useRef } from "react";
 import { cleanObject } from "utils";
 // useSearchParams:一个方便的包装器，通过URLSearchParams接口读取和写入搜索参数。
 
@@ -33,3 +33,19 @@ export const useUrlQueryParam = <K extends string>(keys: K[]) => {
 // })[]
 // const a = ["jack", 12, { gender: "male" }];
 // 在后面添加as const就是来解决这个问题的
+
+/*
+ * 返回组件的挂载状态，如果还没挂载或者已经卸载，返回false;反之，返回true
+ */
+export const useMountedRef = () => {
+  const mountedRef = useRef(false);
+
+  useEffect(() => {
+    mountedRef.current = true;
+    return () => {
+      mountedRef.current = false;
+    };
+  });
+
+  return mountedRef;
+};

@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useMountedRef } from "./url";
 
 // 管理接口请求的custom-hook
 interface State<D> {
@@ -24,6 +25,7 @@ export const useAsync = <D>(initialState?: State<D>, initialConfig?: typeof defa
     ...defaultInitialState,
     ...initialState,
   });
+  const mountedRef = useMountedRef();
   // useState直接传入函数的含义是：惰性初始化；所以，要用useState保存函数，不能直接传入函数
   // https://codesandbox.io/s/blissful-water-230u4?file=/src/App.js
   // 惰性初始化会在页面mount时执行函数参数，把返回值当成State的值;在setRetry时也会执行函数参数
@@ -57,7 +59,7 @@ export const useAsync = <D>(initialState?: State<D>, initialConfig?: typeof defa
     setState({ ...state, stat: "loading" });
     return promises
       .then((data) => {
-        setData(data);
+        if (mountedRef.current) setData(data);
         return data;
       })
       .catch((error) => {
