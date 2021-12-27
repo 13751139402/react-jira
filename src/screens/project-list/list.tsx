@@ -1,6 +1,6 @@
 import React from "react"; // 即时没有使用React但是一定要引入,因为babel会把jsx编译成需要使用React的代码
 import { User } from "./search-pannel";
-import { Table, TableProps } from "antd";
+import { Table, TableProps, Dropdown, Menu } from "antd";
 import dayjs from "dayjs";
 import { Pin } from "components/pin";
 // react-router 和 react-router-dom的关系，类似于react和react-dom/react-native/react-vr...
@@ -13,6 +13,7 @@ import { Pin } from "components/pin";
 // Link要创建a标签，处理a标签的点击时间，和宿主环境（浏览器）强关联。所以要从dom库中引用
 import { Link } from "react-router-dom";
 import { useEditProject } from "utils/project";
+import { ButtonNoPadding } from "components/lib";
 export interface Project {
   id: number;
   name: string;
@@ -25,6 +26,7 @@ export interface Project {
 interface ListProps extends TableProps<any> {
   users: User[];
   refresh?: () => void;
+  setProjectModalOpen: (isOpen: boolean) => void;
 }
 
 // ListProps去掉users就等于TableProps,res为TableProps类型。所以解开对象为Table的属性不会报错
@@ -64,6 +66,25 @@ export const List = ({ users, ...props }: ListProps) => {
           title: "创建时间",
           render(value, project) {
             return <span>{project.created ? dayjs(project.created).format("YYYY-MM-DD") : "无"}</span>;
+          },
+        },
+        {
+          render(value, project) {
+            return (
+              <Dropdown
+                overlay={
+                  <Menu>
+                    <Menu.Item key="edit">
+                      <ButtonNoPadding type="link" onClick={() => props.setProjectModalOpen(true)}>
+                        编辑
+                      </ButtonNoPadding>
+                    </Menu.Item>
+                  </Menu>
+                }
+              >
+                <ButtonNoPadding type="link">编辑</ButtonNoPadding>
+              </Dropdown>
+            );
           },
         },
       ]}
