@@ -26,7 +26,7 @@ export interface Project {
 interface ListProps extends TableProps<any> {
   users: User[];
   refresh?: () => void;
-  setProjectModalOpen: (isOpen: boolean) => void;
+  projectButton: JSX.Element;
 }
 
 // ListProps去掉users就等于TableProps,res为TableProps类型。所以解开对象为Table的属性不会报错
@@ -74,11 +74,7 @@ export const List = ({ users, ...props }: ListProps) => {
               <Dropdown
                 overlay={
                   <Menu>
-                    <Menu.Item key="edit">
-                      <ButtonNoPadding type="link" onClick={() => props.setProjectModalOpen(true)}>
-                        编辑
-                      </ButtonNoPadding>
-                    </Menu.Item>
+                    <Menu.Item key="edit">{props.projectButton}</Menu.Item>
                   </Menu>
                 }
               >

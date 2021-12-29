@@ -10,7 +10,7 @@ import { Row } from "components/lib";
 // 基本类型，可以放到依赖里；组件状态，可以放到依赖里；非组件状态的对象，绝不可以放到依赖里
 // https://codesandbox.io/s/keen-wave-tlz9s?file=/src/App.js
 
-export const ProjectListScreen = (props: { setProjectModalOpen: (isOpen: boolean) => void }) => {
+export const ProjectListScreen = (props: { projectButton: JSX.Element }) => {
   // 每次页面渲染时会重新触发ProjectListScreen,但是effect只有初次渲染或者params改变才执行
   const [param, setParam] = useProjectsSearchParams();
   const { isLoading, error, data: list, retry } = useProject(useDebounce(param, 1000));
@@ -23,11 +23,11 @@ export const ProjectListScreen = (props: { setProjectModalOpen: (isOpen: boolean
     <Container>
       <Row>
         <h1>项目列表</h1>
-        <Button onClick={() => props.setProjectModalOpen(true)}>创建项目</Button>
+        {props.projectButton}
       </Row>
       <SearchPannel param={param} setParam={setParam} users={users || []} />
       {error ? <Typography.Text type="danger">{error.message}</Typography.Text> : ""}
-      <List setProjectModalOpen={props.setProjectModalOpen} refresh={retry} loading={isLoading} dataSource={list || []} users={users || []} />
+      <List projectButton={props.projectButton} refresh={retry} loading={isLoading} dataSource={list || []} users={users || []} />
     </Container>
   );
 };
