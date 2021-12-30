@@ -1,4 +1,4 @@
-import { useCallback, useState } from "react";
+import { useCallback, useReducer, useState } from "react";
 import { useMountedRef } from "./url";
 // useCallback和useMemo都是为了处理引用类型的依赖存在的，限制为不要每次渲染时都重新创建
 // 使用函数则用useCallback，对象使用useMemo
@@ -20,14 +20,23 @@ const defaultInitialState: State<null> = {
 const defaultConfig = {
   throwOnError: false,
 };
+
+const useSafeDispatch = <T>(dispatch: (...args: T[]) => void) => {
+  const mountedRef = useMountedRef();
+  // 判断组件是否在挂载状态中，只有挂载状态中才dispatch
+  return useCallback((...args: T[]) => (mountedRef.current ? dispatch(...args) : void 0), [dispatch, mountedRef]);
+};
+
 // run就是传入一个promise,控制loading,error等state。pormise返回的值会被data接受,setUser作为params来触发hook
 export const useAsync = <D>(initialState?: State<D>, initialConfig?: typeof defaultConfig) => {
   const config = { ...defaultConfig, ...initialConfig };
-  const [state, setState] = useState<State<D>>({
+  // 什么时候用useReducer/useUndo
+  // useReducer和useUndo功能上可以相互替换，useReducer适合定义相互影响的状态，useUndo适合单个状态
+  const [state, dispatch] = useReducer((state: State<D>, action: Partial<State<D>>) => ({ ...state, ...action }), {
     ...defaultInitialState,
     ...initialState,
   });
-  const mountedRef = useMountedRef();
+  const safeDispactch = useSafeDispatch(dispatch);
   // useState直接传入函数的含义是：惰性初始化；所以，要用useState保存函数，不能直接传入函数
   // https://codesandbox.io/s/blissful-water-230u4?file=/src/App.js
   // 惰性初始化会在页面mount时执行函数参数，把返回值当成State的值;在setRetry时也会执行函数参数
@@ -36,21 +45,21 @@ export const useAsync = <D>(initialState?: State<D>, initialConfig?: typeof defa
   // let retry=()=>{} 不能这样写的原因是，每次页面渲染这个函数都会重复执行，所以let retry=()=>{}就会被覆盖，达不到保存promise的效果
   const setData = useCallback(
     (data: D) =>
-      setState({
+      safeDispactch({
         data,
         stat: "success",
         error: null,
       }),
-    []
+    [safeDispactch]
   );
   const setError = useCallback(
     (error: Error) =>
-      setState({
+      safeDispactch({
         data: null,
         stat: "error",
         error,
       }),
-    []
+    [safeDispactch]
   );
   // run用来触发异步请求。每次页面渲染都会重新定义run,这里使用useCallback来包裹，当依赖项改变才重新定义run
   const run = useCallback(
@@ -65,11 +74,10 @@ export const useAsync = <D>(initialState?: State<D>, initialConfig?: typeof defa
           run(runConfig.retry(), runConfig);
         }
       });
-      // setState的函数用法：prevState是此时此刻的state
-      setState((prevState) => ({ ...prevState, stat: "loading" }));
+      safeDispactch({ stat: "loading" });
       return promises
         .then((data) => {
-          if (mountedRef.current) setData(data);
+          setData(data);
           return data;
         })
         .catch((error) => {
@@ -82,7 +90,7 @@ export const useAsync = <D>(initialState?: State<D>, initialConfig?: typeof defa
           return error;
         });
     },
-    [config.throwOnError, mountedRef, setState, setData, setError] // 只有当依赖项被改变时才会重新定义
+    [config.throwOnError, setData, setError, safeDispactch] // 只有当依赖项被改变时才会重新定义
   );
 
   return {
