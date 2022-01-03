@@ -6,16 +6,18 @@ import styled from "@emotion/styled";
 import { Typography, Button } from "antd";
 import { useUsers } from "utils/user";
 import { useProjectsSearchParams } from "./util";
-import { Row } from "components/lib";
+import { ButtonNoPadding, Row } from "components/lib";
+import { projectListActions } from "./project-list.slice";
+import { useDispatch } from "react-redux";
 // 基本类型，可以放到依赖里；组件状态，可以放到依赖里；非组件状态的对象，绝不可以放到依赖里
 // https://codesandbox.io/s/keen-wave-tlz9s?file=/src/App.js
 
-export const ProjectListScreen = (props: { projectButton: JSX.Element }) => {
+export const ProjectListScreen = () => {
   // 每次页面渲染时会重新触发ProjectListScreen,但是effect只有初次渲染或者params改变才执行
   const [param, setParam] = useProjectsSearchParams();
   const { isLoading, error, data: list, retry } = useProject(useDebounce(param, 1000));
   const { data: users } = useUsers();
-
+  const dispatch = useDispatch();
   // 渲染函数监听了param，data,error 三者有变化的时候就触发ProjectListScreen渲染页面
   // input改变时会setParam改变param
   // custom-hook就是传state进去，进行逻辑处理，再导出state。形成一个独立的业务，但是通过state又可以与外部响应式
@@ -23,11 +25,13 @@ export const ProjectListScreen = (props: { projectButton: JSX.Element }) => {
     <Container>
       <Row>
         <h1>项目列表</h1>
-        {props.projectButton}
+        <ButtonNoPadding onClick={() => dispatch(projectListActions.openProjectModal())} type="link">
+          创建项目
+        </ButtonNoPadding>
       </Row>
       <SearchPannel param={param} setParam={setParam} users={users || []} />
       {error ? <Typography.Text type="danger">{error.message}</Typography.Text> : ""}
-      <List projectButton={props.projectButton} refresh={retry} loading={isLoading} dataSource={list || []} users={users || []} />
+      <List refresh={retry} loading={isLoading} dataSource={list || []} users={users || []} />
     </Container>
   );
 };
