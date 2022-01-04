@@ -1,8 +1,9 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { User } from "screens/project-list/search-pannel";
 import * as auth from "auth-provider";
-import { AuthForm } from "context/auth-context";
+import { AuthForm, bootstrapUser } from "context/auth-context";
 import { AppDispatch } from "store";
+import { RootState } from "store";
 interface State {
   user: User | null;
 }
@@ -24,6 +25,12 @@ export const authSlice = createSlice({
 
 const { setUser } = authSlice.actions;
 
-export const login = (form: AuthForm) => () => (dispatch: AppDispatch) => auth.login(form).then((user) => dispatch(setUser(user)));
-export const register = (form: AuthForm) => () => (dispatch: AppDispatch) => auth.register(form).then((user) => dispatch(setUser(user)));
-export const logout = () => () => (dispatch: AppDispatch) => auth.logout().then(() => dispatch(setUser(null)));
+export const selectUser = (state: RootState) => state.auth.user;
+
+// dispatch的参数是一个函数，所以这里需要用一个函数传参返回一个函数
+// dispatch(setUser(user))触发页面渲染
+// 第一个函数是传参，第二个函数返回Promise给dispatch执行，第三个函数被dispatch执行后
+export const login = (form: AuthForm) => (dispatch: AppDispatch) => auth.login(form).then((user) => dispatch(setUser(user)));
+export const register = (form: AuthForm) => (dispatch: AppDispatch) => auth.register(form).then((user) => dispatch(setUser(user)));
+export const logout = () => (dispatch: AppDispatch) => auth.logout().then(() => dispatch(setUser(null)));
+export const bootstrap = () => (dispatch: AppDispatch) => bootstrapUser().then((user) => dispatch(setUser(user)));

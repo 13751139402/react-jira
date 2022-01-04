@@ -1,16 +1,18 @@
-import React, { ReactNode } from "react";
+import React, { ReactNode, useCallback } from "react";
 import * as auth from "auth-provider";
 import { User } from "screens/project-list/search-pannel";
 import { http } from "utils/http";
 import { useMount } from "utils";
 import { useAsync } from "utils/use-async";
 import { FullPageLoading, FullPageErrorFallback } from "components/lib";
+import * as authStore from "store/auth.slice";
+import { useDispatch, useSelector } from "react-redux";
 export interface AuthForm {
   username: string;
   password: string;
 }
 // bootstrap是初始化的意思
-const bootstrapUser = async () => {
+export const bootstrapUser = async () => {
   let user = null;
   const token = auth.getToken();
   if (token) {
@@ -35,27 +37,12 @@ const AuthContext = React.createContext<
 >(undefined);
 AuthContext.displayName = "AuthContext"; // React DevTools中的Provider名称
 
-export const useAuth = () => {
-  // 返回当前的context值
-  const context = React.useContext(AuthContext);
-  if (!context) {
-    // 获取不到context是因为不在Provider的children中使用,组件向上找不到订阅的context
-    throw new Error("useAuth必须在AuthProvider中使用");
-  }
-  return context;
-};
-
 // children就是Vue中的slot
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const { data: user, isLoading, isIdle, run, setData: setUser, isError, error } = useAsync<User | null>(undefined, { throwOnError: true });
-  // 函数式编程 消参
-  // 原代码 const login = (form: AuthForm) => auth.login(form).then((user) => setUser(user));
-  const login = (form: AuthForm) => auth.login(form).then(setUser);
-  const register = (form: AuthForm) => auth.register(form).then(setUser);
-  const logout = () => auth.logout().then(() => setUser(null));
-
+  const dispatch: (...args: unknown[]) => Promise<User> = useDispatch();
   useMount(() => {
-    run(bootstrapUser());
+    run(dispatch(authStore.bootstrap()));
   });
   if (isIdle || isLoading) {
     return <FullPageLoading />;
@@ -64,7 +51,22 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   if (isError) {
     return <FullPageErrorFallback error={error}></FullPageErrorFallback>;
   }
-  // 挂载Provider时传入value和children
-  // 当children组件使用login,register和logout时会触发setUser,改变user值重新渲染页面
-  return <AuthContext.Provider value={{ user, login, register, logout }}>{children}</AuthContext.Provider>;
+
+  return <div>{children}</div>;
+};
+
+export const useAuth = () => {
+  // 返回当前的context值
+  // 定义dispatch触发logout,ts显示声明,返回一个promise,参数类型不重要
+  const dispatch: (...args: unknown[]) => Promise<User> = useDispatch();
+  const user = useSelector(authStore.selectUser);
+  const login = useCallback((form: AuthForm) => dispatch(authStore.login(form)), [dispatch]);
+  const register = useCallback((form: AuthForm) => dispatch(authStore.register(form)), [dispatch]);
+  const logout = useCallback(() => dispatch(authStore.logout()), [dispatch]);
+  return {
+    user,
+    login,
+    register,
+    logout,
+  };
 };

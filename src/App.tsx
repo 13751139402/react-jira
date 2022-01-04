@@ -8,6 +8,7 @@ import { FullPageErrorFallback } from "components/lib";
 
 function App() {
   const { user } = useAuth();
+  console.log("App.user", user);
   return (
     <div className="App">
       <ErrorBoundary fallbackRender={FullPageErrorFallback}>{user ? <AuthenticatedApp /> : <UnauthticatedApp />}</ErrorBoundary>
