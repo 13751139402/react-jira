@@ -33,7 +33,7 @@ interface ListProps extends TableProps<any> {
 export const List = ({ users, ...props }: ListProps) => {
   // hook只能放在函数组件顶部，返回值作为事件函数
   const { mutate } = useEditProject();
-  const pinProject = (id: number) => (pin: boolean) => mutate({ id: id, pin: pin }).then(props.refresh);
+  const pinProject = (id: number) => (pin: boolean) => mutate({ id: id, pin: pin });
   const { open } = useProjectModal();
   return (
     <Table

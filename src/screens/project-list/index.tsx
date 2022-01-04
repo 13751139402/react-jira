@@ -1,19 +1,21 @@
 import { SearchPannel } from "./search-pannel";
 import { List } from "./list";
-import { useDebounce, useDocumentTitle } from "utils";
+import { useDebounce } from "utils";
 import { useProject } from "utils/project";
 import styled from "@emotion/styled";
-import { Typography, Button } from "antd";
+import { Typography } from "antd";
 import { useUsers } from "utils/user";
 import { useProjectModal, useProjectsSearchParams } from "./util";
-import { ButtonNoPadding, Row } from "components/lib";
+import { ButtonNoPadding, ErrorBox, Row } from "components/lib";
 // 基本类型，可以放到依赖里；组件状态，可以放到依赖里；非组件状态的对象，绝不可以放到依赖里
 // https://codesandbox.io/s/keen-wave-tlz9s?file=/src/App.js
 
 export const ProjectListScreen = () => {
   // 每次页面渲染时会重新触发ProjectListScreen,但是effect只有初次渲染或者params改变才执行
   const [param, setParam] = useProjectsSearchParams();
-  const { isLoading, error, data: list, retry } = useProject(useDebounce(param, 1000));
+  const { isLoading, error, data: list } = useProject(useDebounce(param, 1000));
+  console.log("isLoading", isLoading);
+
   const { data: users } = useUsers();
   const { open } = useProjectModal();
   // 渲染函数监听了param，data,error 三者有变化的时候就触发ProjectListScreen渲染页面
@@ -28,8 +30,8 @@ export const ProjectListScreen = () => {
         </ButtonNoPadding>
       </Row>
       <SearchPannel param={param} setParam={setParam} users={users || []} />
-      {error ? <Typography.Text type="danger">{error.message}</Typography.Text> : ""}
-      <List refresh={retry} loading={isLoading} dataSource={list || []} users={users || []} />
+      <ErrorBox error={error} />
+      <List loading={isLoading} dataSource={list || []} users={users || []} />
     </Container>
   );
 };

@@ -2,6 +2,7 @@ import styled from "@emotion/styled";
 import React from "react";
 import { Spin, Typography } from "antd";
 import { Button } from "antd";
+import { DevTools } from "jira-dev-tool";
 export const Row = styled.div<{ gap?: Number | Boolean; between?: Boolean; marginBottom?: Number | Boolean }>`
   display: flex;
   align-items: center;
@@ -28,9 +29,19 @@ export const FullPageLoading = () => (
 
 export const FullPageErrorFallback = ({ error }: { error: Error | null }) => (
   <FullPage>
-    <Typography.Text type="danger">{error?.message}</Typography.Text>
+    <ErrorBox error={error} />
   </FullPage>
 );
+
+// 类型守卫 当符合value?.message这个条件时,value就是Error类型
+const isError = (value: any): value is Error => value?.message;
+
+export const ErrorBox = ({ error }: { error: unknown }) => {
+  if (isError(error)) {
+    return <Typography.Text type="danger">{error?.message}</Typography.Text>;
+  }
+  return null;
+};
 
 export const ButtonNoPadding = styled(Button)`
   padding: 0;
