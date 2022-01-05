@@ -2,7 +2,7 @@ import { useAsync } from "utils/use-async";
 import { Project } from "screens/project-list/list";
 import { useHttp } from "utils/http";
 import { useMutation, useQuery, useQueryClient } from "react-query";
-export const useProject = (param?: Partial<Project>) => {
+export const useProjects = (param?: Partial<Project>) => {
   const client = useHttp();
 
   // param变化时,useQuery自动触发
@@ -38,4 +38,10 @@ export const useAddProject = () => {
       onSuccess: () => queryClient.invalidateQueries("projects"),
     }
   );
+};
+
+export const useProject = (id?: number) => {
+  const client = useHttp();
+  // enabled只有当id有值才激活useQuery
+  return useQuery<Project>(["project", { id }], () => client(`projects/${id}`), { enabled: Boolean(id) });
 };

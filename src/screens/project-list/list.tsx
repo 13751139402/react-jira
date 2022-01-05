@@ -33,8 +33,9 @@ interface ListProps extends TableProps<any> {
 export const List = ({ users, ...props }: ListProps) => {
   // hook只能放在函数组件顶部，返回值作为事件函数
   const { mutate } = useEditProject();
+  const { startEdit } = useProjectModal();
   const pinProject = (id: number) => (pin: boolean) => mutate({ id: id, pin: pin });
-  const { open } = useProjectModal();
+  const editProject = (id: number) => () => startEdit(id);
   return (
     <Table
       rowKey="id"
@@ -75,11 +76,10 @@ export const List = ({ users, ...props }: ListProps) => {
               <Dropdown
                 overlay={
                   <Menu>
-                    <Menu.Item key="edit">
-                      <ButtonNoPadding onClick={open} type="link">
-                        编辑
-                      </ButtonNoPadding>
+                    <Menu.Item key="edit" onClick={editProject(project.id)}>
+                      编辑
                     </Menu.Item>
+                    <Menu.Item key="delete">删除</Menu.Item>
                   </Menu>
                 }
               >
