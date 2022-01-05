@@ -13,7 +13,6 @@ export const useProjectModal = () => {
   const [{ projectCreate }, setProjectCreate] = useUrlQueryParam(["projectCreate"]);
   const [{ editingProjectId }, setEditingProjectId] = useUrlQueryParam(["editingProjectId"]);
   const { data: editingProject, isLoading } = useProject(Number(editingProjectId));
-  console.log("editingProject", editingProject);
 
   const open = () => setProjectCreate({ projectCreate: true });
   const close = () => {
