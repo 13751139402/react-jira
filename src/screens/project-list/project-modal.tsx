@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { Drawer, Button, Spin, Form, Input } from "antd";
-import { useProjectModal } from "./util";
+import { useProjectModal, useProjectQueryKey } from "./util";
 import { UserSelect } from "components/user-select";
 import { useEditProject, useAddProject } from "utils/project";
 import { useForm } from "antd/es/form/Form";
@@ -11,7 +11,7 @@ export const ProjectModal = () => {
   const [form] = useForm(); // form可以控制下面的Form
   const useMutateProject = editingProject ? useEditProject : useAddProject;
   // mutate和mutateAsync,async能控制请求完成再做 逻辑
-  const { mutateAsync, error, isLoading: mutateLoading } = useMutateProject();
+  const { mutateAsync, error, isLoading: mutateLoading } = useMutateProject(useProjectQueryKey());
   const onFinish = (values: any) => {
     mutateAsync({ ...editingProject, ...values }).then(() => {
       form.resetFields();

@@ -8,6 +8,8 @@ interface Config extends RequestInit {
   data?: object;
 }
 export const http = async (endpoint: String, { data, token, headers, ...customConfig }: Config = {}) => {
+  console.log("httphttphttphttp");
+
   const config = {
     method: "GET",
     headers: {
@@ -23,6 +25,7 @@ export const http = async (endpoint: String, { data, token, headers, ...customCo
   } else {
     config.body = JSON.stringify(data || {});
   }
+  console.log(`endpoint-data:${endpoint}`);
   return window.fetch(`${apiUrl}/${endpoint}`, config).then(async (response) => {
     if (response.status === 401) {
       // 没有权限,退出登录
