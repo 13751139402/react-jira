@@ -3,7 +3,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { cleanObject, subset } from "utils";
 // useSearchParams:一个方便的包装器，通过URLSearchParams接口读取和写入搜索参数。
 
-// 返回页面url中,指定键的参数值
+// 1.获取响应式数据query 2.设置queyr
 export const useUrlQueryParam = <K extends string>(keys: K[]) => {
   const [searchParams] = useSearchParams();
   const setSearchParams = useSetUrlSearchParam();
@@ -46,13 +46,14 @@ export const useMountedRef = () => {
   return mountedRef;
 };
 
+// 设置URL
 export const useSetUrlSearchParam = () => {
   const [searchParams, setSearchParam] = useSearchParams();
   return (params: { [key in string]: unknown }) => {
     const o = cleanObject({
-      ...Object.fromEntries(searchParams),
-      ...params,
+      ...Object.fromEntries(searchParams), // 取出url的query改成对象
+      ...params, // params覆盖前面的值
     }) as URLSearchParamsInit;
-    return setSearchParam(o);
+    return setSearchParam(o); // 赋值url
   };
 };
