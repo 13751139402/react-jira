@@ -5,6 +5,7 @@ import { http } from "utils/http";
 import { useMount } from "utils";
 import { useAsync } from "utils/use-async";
 import { FullPageLoading, FullPageErrorFallback } from "components/lib";
+import { useQueryClient } from "react-query";
 interface AuthForm {
   username: string;
   password: string;
@@ -48,11 +49,16 @@ export const useAuth = () => {
 // children就是Vue中的slot
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const { data: user, isLoading, isIdle, run, setData: setUser, isError, error } = useAsync<User | null>(undefined, { throwOnError: true });
+  const queryClient = useQueryClient();
   // 函数式编程 消参
   // 原代码 const login = (form: AuthForm) => auth.login(form).then((user) => setUser(user));
   const login = (form: AuthForm) => auth.login(form).then(setUser);
   const register = (form: AuthForm) => auth.register(form).then(setUser);
-  const logout = () => auth.logout().then(() => setUser(null));
+  const logout = () =>
+    auth.logout().then(() => {
+      setUser(null);
+      queryClient.clear(); // 退出登录时把所有react-query获取的数据都清除掉
+    });
 
   useMount(() => {
     run(bootstrapUser());

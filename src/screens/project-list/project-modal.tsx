@@ -18,6 +18,10 @@ export const ProjectModal = () => {
       close();
     });
   };
+  const closeModal = () => {
+    form.resetFields();
+    close();
+  };
 
   const title = editingProject ? "编辑项目" : "创建项目";
 
@@ -26,7 +30,7 @@ export const ProjectModal = () => {
   }, [editingProject, form]);
 
   return (
-    <Drawer visible={projectCreate} width="100%" onClose={close}>
+    <Drawer visible={projectCreate} width="100%" onClose={closeModal}>
       <Container>
         {isLoading ? (
           <Spin size="large" />
