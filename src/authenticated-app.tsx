@@ -29,7 +29,7 @@ export const AuthenticatedApp = () => {
         <Main>
           <PageHeader />
           <Routes>
-            <Route path={"/projects"} element={<ProjectListScreen />} />
+            <Route path={"/"} element={<ProjectListScreen />} />
             <Route path={"/projects/:projectId/*"} element={<ProjectScreen />} />
           </Routes>
           {/* 默认路由 */}

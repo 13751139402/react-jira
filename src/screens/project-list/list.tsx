@@ -1,5 +1,5 @@
 import React from "react"; // 即时没有使用React但是一定要引入,因为babel会把jsx编译成需要使用React的代码
-import { User } from "./search-pannel";
+import { User } from "../../types/User";
 import { Table, TableProps, Dropdown, Menu, Modal } from "antd";
 import { useDeleteProject, useEditProject } from "../../utils/project";
 import dayjs from "dayjs";
@@ -15,15 +15,7 @@ import { Pin } from "components/pin";
 import { Link } from "react-router-dom";
 import { ButtonNoPadding } from "components/lib";
 import { useProjectModal, useProjectQueryKey } from "./util";
-export interface Project {
-  id: number;
-  name: string;
-  personId: number;
-  pin: boolean;
-  organization: string;
-  created: number;
-}
-
+import { Project } from "../../types/Project";
 interface ListProps extends TableProps<any> {
   users: User[];
   refresh?: () => void;

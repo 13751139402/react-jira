@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import { cleanObject } from "utils";
 import { useAsync } from "./use-async";
 import { useHttp } from "utils/http";
-import { User } from "screens/project-list/search-pannel";
+import { User } from "types/User";
 
 export const useUsers = (param?: Partial<User>) => {
   const { run, ...result } = useAsync<User[]>();
