@@ -24,20 +24,20 @@ import { ButtonNoPadding } from "components/lib";
  */
 export const AuthenticatedApp = () => {
   return (
-    <Container>
-      <Router>
+    <Router>
+      <Container>
+        <PageHeader />
         <Main>
-          <PageHeader />
           <Routes>
             <Route path={"/"} element={<ProjectListScreen />} />
             <Route path={"/projects/:projectId/*"} element={<ProjectScreen />} />
           </Routes>
           {/* 默认路由 */}
           {/* <Navigate to={"/projects"} /> */}
+          <ProjectModal />
         </Main>
-        <ProjectModal />
-      </Router>
-    </Container>
+      </Container>
+    </Router>
   );
 };
 const PageHeader = () => {
@@ -74,11 +74,12 @@ const PageHeader = () => {
 
 const Container = styled.div`
   display: grid;
-  grid-template-rows: 6rem 1fr 6rem;
+  grid-template-rows: 6rem 1fr;
   height: 100vh;
 `;
 
-const Header = styled.header`
+// grid-area 用来给grid子元素起名字
+const Header = styled(Row)`
   grid-area: "header";
   display: flex;
   flex-direction: row;
@@ -92,5 +93,6 @@ const HeaderLeft = styled(Row)`
 `;
 const HeaderRight = styled.div``;
 const Main = styled.main`
-  grid-area: "main";
+  display: flex;
+  overflow: hidden;
 `;
