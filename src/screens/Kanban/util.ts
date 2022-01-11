@@ -15,6 +15,7 @@ export const useKanbansSearchParams = () => ({ projectId: useProjectIdInUrl() })
 
 export const useKanbansQueryKey = () => ["kanbans", useKanbansSearchParams()];
 
+// 拿到query中的参数,用于react-query乐观更新的key
 export const useTasksSearchParams = () => {
   const [param, setParam] = useUrlQueryParam(["name", "typeId", "processorId", "tagId"]);
   const projectId = useProjectIdInUrl();
@@ -30,4 +31,4 @@ export const useTasksSearchParams = () => {
   );
 };
 
-export const useTasksQueryKey = () => ["tasks", useTasksSearchParams()];
+export const useTasksQueryKey = () => ["tasks", useTasksSearchParams()] as const;

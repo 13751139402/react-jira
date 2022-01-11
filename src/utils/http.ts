@@ -8,8 +8,6 @@ interface Config extends RequestInit {
   data?: object;
 }
 export const http = async (endpoint: String, { data, token, headers, ...customConfig }: Config = {}) => {
-  console.log("httphttphttphttp");
-
   const config = {
     method: "GET",
     headers: {
@@ -47,5 +45,8 @@ export const useHttp = () => {
   // Parameters会把http函数的参数数组的类型拿出来
   // useCallback在页面渲染时告诉react这个变量不需要重新声明，防止useEffect死循环
   type httpParams = Parameters<typeof http>;
-  return useCallback((...[endpoint, config]: httpParams) => http(endpoint, { ...config, token: user?.token }), [user?.token]);
+  return useCallback(
+    (...[endpoint, config]: httpParams) => http(endpoint, { ...config, token: user?.token }),
+    [user?.token]
+  );
 };
