@@ -36,7 +36,10 @@ export const useAddProject = (queryKey: QueryKey) => {
 
 export const useDeleteProject = (queryKey: QueryKey) => {
   const client = useHttp();
-  return useMutation(({ id }: { id: number }) => client(`projects/${id}`, { method: "DELETE" }), useDeleteConfig(queryKey));
+  return useMutation(
+    ({ id }: { id: number }) => client(`projects/${id}`, { method: "DELETE" }),
+    useDeleteConfig(queryKey)
+  );
 };
 
 export const useProject = (id?: number) => {

@@ -25,7 +25,7 @@ export const KanbanScreen = () => {
         <Spin size="large"></Spin>
       ) : (
         <ColumnsContainer>
-          {kanbans?.map((kanban) => (
+          {kanbans?.map((kanban, index) => (
             <KanbanColumn kanban={kanban} key={kanban.id}></KanbanColumn>
           ))}
           <CreateKanban></CreateKanban>
