@@ -1,4 +1,6 @@
 import { QueryKey, useQueryClient } from "react-query";
+import { Task } from "types/task";
+import { reorder } from "utils/reorder";
 
 // 乐观更新,queryKey来定位缓存
 const useConfig = (queryKey: QueryKey, callback: (target: any, old?: any[]) => any[]) => {
@@ -28,4 +30,11 @@ export const useEditConfig = (queryKey: QueryKey) =>
 // 将新增的内容添加到缓存列表中
 export const useAddConfig = (queryKey: QueryKey) => useConfig(queryKey, (target, old: any) => [...old, target]);
 
-export const useReorderConfig = (queryKey: QueryKey) => useConfig(queryKey, (target, old) => old || []);
+export const useReorderKanbanConfig = (queryKey: QueryKey) =>
+  useConfig(queryKey, (target, old) => reorder({ list: old, ...target }));
+
+export const useReorderTaskConfig = (queryKey: QueryKey) =>
+  useConfig(queryKey, (target, old) => {
+    const orderedList = reorder({ list: old, ...target }) as Task[];
+    return orderedList.map((item) => (item.id === target.fromId ? { ...item, kanbanId: target.toKanbanId } : item));
+  });
