@@ -2,7 +2,8 @@ import { Project } from "types/Project";
 import { useHttp } from "utils/http";
 import { QueryKey, useMutation, useQuery } from "react-query";
 import { Task } from "types/task";
-import { useDeleteConfig, useEditConfig } from "./use-optimistic-options";
+import { useDeleteConfig, useEditConfig, useReorderConfig } from "./use-optimistic-options";
+import { SortProps } from "./kanban";
 export const useTasks = (param?: Partial<Task>) => {
   const client = useHttp();
   // 两秒之内多次发送会只发送一次
@@ -34,4 +35,14 @@ export const useDeleteTask = (queryKey: QueryKey) => {
     ({ id }: { id: number }) => client(`tasks/${id}`, { method: "DELETE" }),
     useDeleteConfig(queryKey)
   );
+};
+
+export const useReorderTask = (queryKey: QueryKey) => {
+  const client = useHttp();
+  return useMutation((params: SortProps) => {
+    return client("tasks/reorder", {
+      data: params,
+      method: "POST",
+    });
+  }, useReorderConfig(queryKey));
 };

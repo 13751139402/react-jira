@@ -27,3 +27,5 @@ export const useEditConfig = (queryKey: QueryKey) =>
 // 乐观更新用于配制useMutation的第二个参数
 // 将新增的内容添加到缓存列表中
 export const useAddConfig = (queryKey: QueryKey) => useConfig(queryKey, (target, old: any) => [...old, target]);
+
+export const useReorderConfig = (queryKey: QueryKey) => useConfig(queryKey, (target, old) => old || []);
