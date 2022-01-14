@@ -9,7 +9,8 @@ import right from "assets/right.svg";
 import { useDocumentTitle } from "utils";
 import { ErrorBox } from "components/lib";
 
-export const UnauthticatedApp = () => {
+// eslint-disable-next-line import/no-anonymous-default-export
+export default () => {
   const [isRegister, setIsRegister] = useState(false);
   const [error, setError] = useState<Error | null>(null);
   useDocumentTitle("请登陆注册以继续");
