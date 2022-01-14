@@ -12,6 +12,7 @@ import { ProjectModal } from "screens/project-list/project-modal";
 import { resetRoute } from "utils";
 import { ProjectPopover } from "components/project.popover";
 import { ButtonNoPadding } from "components/lib";
+import { UserPopover } from "components/user-popover";
 /**
  * grid和flex各自的应用场景
  * 1.要考虑，是一维布局 还是 二维部剧
@@ -49,7 +50,7 @@ const PageHeader = () => {
           <SoftwareLogo width="18rem" color={"rgb(38,132,255)"} />
         </ButtonNoPadding>
         <ProjectPopover />
-        <span>用户</span>
+        <UserPopover />
       </HeaderLeft>
       <HeaderRight>
         <Dropdown
@@ -95,4 +96,5 @@ const HeaderRight = styled.div``;
 const Main = styled.main`
   display: flex;
   overflow: hidden;
+  width: 100%;
 `;

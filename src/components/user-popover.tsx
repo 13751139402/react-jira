@@ -5,30 +5,26 @@ import { List, Divider } from "antd";
 import styled from "@emotion/styled/macro";
 import { ButtonNoPadding } from "./lib";
 import { useProjectModal } from "screens/project-list/util";
-export const ProjectPopover = () => {
-  const { data: projects, isLoading, refetch } = useProjects();
+import { useUsers } from "utils/user";
+export const UserPopover = () => {
+  const { data: users, isLoading, refetch } = useUsers();
   const { open } = useProjectModal();
-  const pinnedProjects = projects?.filter((project) => project.pin);
   const content = (
     <ContentContainer>
-      <Typography.Text type="secondary">收藏项目</Typography.Text>
+      <Typography.Text type="secondary">组员列表</Typography.Text>
       <List>
-        {pinnedProjects?.map((project) => (
-          <List.Item key={project.id}>
-            <List.Item.Meta title={project.name}></List.Item.Meta>
+        {users?.map((user) => (
+          <List.Item key={user.id}>
+            <List.Item.Meta title={user.name}></List.Item.Meta>
           </List.Item>
         ))}
       </List>
-      <Divider />
-      <ButtonNoPadding onClick={open} type="link">
-        创建项目
-      </ButtonNoPadding>
     </ContentContainer>
   );
   // 每次打开的时候都refetch刷新缓存
   return (
     <Popover onVisibleChange={() => refetch()} placement="bottom" content={content}>
-      <span>项目</span>
+      <span>组员</span>
     </Popover>
   );
 };
