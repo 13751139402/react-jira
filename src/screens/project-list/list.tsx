@@ -22,7 +22,11 @@ interface ListProps extends TableProps<any> {
 }
 
 // ListProps去掉users就等于TableProps,res为TableProps类型。所以解开对象为Table的属性不会报错
-export const List = ({ users, ...props }: ListProps) => {
+// React.memo会对比props,只有当props/state改变时候这个组件才会渲染
+// React.memo vs useMemo React.memo用来memo组件的,useMemo用来memo值的
+export const List = React.memo(({ users, ...props }: ListProps) => {
+  console.log("list render");
+
   // hook只能放在函数组件顶部，返回值作为事件函数
   const { mutate } = useEditProject(useProjectQueryKey());
   const pinProject = (id: number) => (pin: boolean) => mutate({ id: id, pin: pin });
@@ -69,7 +73,7 @@ export const List = ({ users, ...props }: ListProps) => {
       {...props}
     ></Table>
   );
-};
+});
 
 const More = ({ project }: { project: Project }) => {
   const { startEdit } = useProjectModal();
