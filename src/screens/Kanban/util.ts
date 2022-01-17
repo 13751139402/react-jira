@@ -19,7 +19,7 @@ export const useKanbansQueryKey = () => ["kanbans", useKanbansSearchParams()];
 
 // 拿到query中的参数,用于react-query乐观更新的key
 export const useTasksSearchParams = () => {
-  const [param, setParam] = useUrlQueryParam(["name", "typeId", "processorId", "tagId"]);
+  const [param] = useUrlQueryParam(["name", "typeId", "processorId", "tagId"]);
   const projectId = useProjectIdInUrl();
   const debouncedName = useDebounce(param.name, 500);
   return useMemo(

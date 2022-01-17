@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { RegisterScreen } from "unauthenticated-app/register";
 import { LoginScreen } from "unauthenticated-app/login";
-import { Card, Divider, Button, Typography } from "antd";
+import { Card, Divider, Button } from "antd";
 import styled from "@emotion/styled";
 // import logo from "assets/logo.svg";
 import left from "assets/left.svg";
@@ -9,8 +9,7 @@ import right from "assets/right.svg";
 import { useDocumentTitle } from "utils";
 import { ErrorBox } from "components/lib";
 
-// eslint-disable-next-line import/no-anonymous-default-export
-export default () => {
+export default function UnauthenticatedApp() {
   const [isRegister, setIsRegister] = useState(false);
   const [error, setError] = useState<Error | null>(null);
   useDocumentTitle("请登陆注册以继续");
@@ -29,7 +28,7 @@ export default () => {
       </ShadowCard>
     </Container>
   );
-};
+}
 
 export const LongButton = styled(Button)`
   width: 100%;

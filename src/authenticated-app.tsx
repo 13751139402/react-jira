@@ -23,8 +23,7 @@ import { UserPopover } from "components/user-popover";
  * 从内容出发，用flex
  * 从布局出发，用grid
  */
-// eslint-disable-next-line import/no-anonymous-default-export
-export default () => {
+export default function AuthenticatedApp() {
   return (
     <Router>
       <Container>
@@ -41,7 +40,7 @@ export default () => {
       </Container>
     </Router>
   );
-};
+}
 const PageHeader = () => {
   const { logout, user } = useAuth();
   return (

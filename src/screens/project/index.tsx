@@ -1,7 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import styled from "@emotion/styled";
-import { Routes, Route, Navigate, useLocation } from "react-router";
+import { Routes, Route, useLocation } from "react-router";
 import { KanbanScreen } from "screens/Kanban";
 import { EpicScreen } from "screens/epic";
 import { ScreenContainer } from "components/lib";

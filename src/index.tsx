@@ -6,14 +6,17 @@ import reportWebVitals from "./reportWebVitals";
 import { loadServer, DevTools } from "jira-dev-tool";
 import "antd/dist/antd.less"; // 通过less的css变量自定义antd里面的主题
 import { AppProviders } from "context";
+import { Profiler } from "components/profiler";
 loadServer(() => {
   ReactDOM.render(
     <React.StrictMode>
-      {/* 订阅context */}
-      <AppProviders>
-        <DevTools />
-        <App />
-      </AppProviders>
+      <Profiler id={"Root App"} phases={["mount"]}>
+        {/* 订阅context */}
+        <AppProviders>
+          <DevTools />
+          <App />
+        </AppProviders>
+      </Profiler>
     </React.StrictMode>,
     document.getElementById("root")
   );

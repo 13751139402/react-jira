@@ -1,14 +1,12 @@
 import React, { useEffect } from "react";
 import { Drawer } from "antd";
 import { DrawerProps } from "antd/es/drawer";
-import styled from "@emotion/styled";
 import { useAddEpics } from "utils/epic";
 import { useEpicsQueryKey } from "./util";
 import { useForm } from "antd/es/form/Form";
 import { ErrorBox } from "components/lib";
 import { Form, Spin, Input, Button } from "antd";
 import { Container } from "screens/Kanban/kanban-column";
-import { UserSelect } from "components/user-select";
 import { useProjectIdInUrl } from "screens/Kanban/util";
 export const CreateEpic = (props: Pick<DrawerProps, "visible"> & { onClose: () => void }) => {
   const { mutate: addEpic, isLoading, error } = useAddEpics(useEpicsQueryKey());

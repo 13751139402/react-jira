@@ -3,11 +3,12 @@ import { List } from "./list";
 import { useDebounce } from "utils";
 import { useProjects } from "utils/project";
 import styled from "@emotion/styled";
-import { Typography, Input } from "antd";
+import { Input } from "antd";
 import { useUsers } from "utils/user";
 import { useProjectModal, useProjectsSearchParams } from "./util";
 import { ButtonNoPadding, ErrorBox, Row } from "components/lib";
 import { useState } from "react";
+import { Profiler } from "components/profiler";
 // 基本类型，可以放到依赖里；组件状态，可以放到依赖里；非组件状态的对象，绝不可以放到依赖里
 // https://codesandbox.io/s/keen-wave-tlz9s?file=/src/App.js
 
@@ -24,18 +25,20 @@ export const ProjectListScreen = () => {
   // input改变时会setParam改变param
   // custom-hook就是传state进去，进行逻辑处理，再导出state。形成一个独立的业务，但是通过state又可以与外部响应式
   return (
-    <Container>
-      <Input value={value} onChange={(value) => setValue(value.target.value)}></Input>
-      <Row>
-        <h1>项目列表</h1>
-        <ButtonNoPadding onClick={open} type="link">
-          创建项目
-        </ButtonNoPadding>
-      </Row>
-      <SearchPannel param={param} setParam={setParam} users={users || []} />
-      <ErrorBox error={error} />
-      <List loading={isLoading} dataSource={list || []} users={users || []} />
-    </Container>
+    <Profiler id="项目列表">
+      <Container>
+        <Input value={value} onChange={(value) => setValue(value.target.value)}></Input>
+        <Row>
+          <h1>项目列表</h1>
+          <ButtonNoPadding onClick={open} type="link">
+            创建项目
+          </ButtonNoPadding>
+        </Row>
+        <SearchPannel param={param} setParam={setParam} users={users || []} />
+        <ErrorBox error={error} />
+        <List loading={isLoading} dataSource={list || []} users={users || []} />
+      </Container>
+    </Profiler>
   );
 };
 

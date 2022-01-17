@@ -2,7 +2,6 @@ import styled from "@emotion/styled";
 import React from "react";
 import { Spin, Typography } from "antd";
 import { Button } from "antd";
-import { DevTools } from "jira-dev-tool";
 export const Row = styled.div<{ gap?: Number | Boolean; between?: Boolean; marginBottom?: Number | Boolean }>`
   display: flex;
   align-items: center;

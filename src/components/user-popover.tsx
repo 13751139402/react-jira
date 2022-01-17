@@ -1,14 +1,10 @@
 import React from "react";
 import { Popover, Typography } from "antd";
-import { useProjects } from "utils/project";
-import { List, Divider } from "antd";
+import { List } from "antd";
 import styled from "@emotion/styled/macro";
-import { ButtonNoPadding } from "./lib";
-import { useProjectModal } from "screens/project-list/util";
 import { useUsers } from "utils/user";
 export const UserPopover = () => {
-  const { data: users, isLoading, refetch } = useUsers();
-  const { open } = useProjectModal();
+  const { data: users, refetch } = useUsers();
   const content = (
     <ContentContainer>
       <Typography.Text type="secondary">组员列表</Typography.Text>

@@ -13,7 +13,6 @@ import { Mark } from "components/mark";
 import { Row } from "components/lib";
 import { useDeleteKanban } from "utils/kanban";
 import { Drag, Drop, DropChild } from "components/drag-and-drop";
-import { DragDropContext } from "react-beautiful-dnd";
 const TaskTypeIcon = ({ id }: { id: number }) => {
   const { data: taskTypes } = useTaskTypes();
   const name = taskTypes?.find((taskTypes) => taskTypes.id === id)?.name;

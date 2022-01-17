@@ -6,7 +6,7 @@ import styled from "@emotion/styled/macro";
 import { ButtonNoPadding } from "./lib";
 import { useProjectModal } from "screens/project-list/util";
 export const ProjectPopover = () => {
-  const { data: projects, isLoading, refetch } = useProjects();
+  const { data: projects, refetch } = useProjects();
   const { open } = useProjectModal();
   const pinnedProjects = projects?.filter((project) => project.pin);
   const content = (

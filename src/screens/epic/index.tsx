@@ -1,6 +1,6 @@
 import { Row, ScreenContainer } from "components/lib";
 import React, { useState } from "react";
-import { useProjectInUrl, useTasksSearchParams } from "screens/Kanban/util";
+import { useProjectInUrl } from "screens/Kanban/util";
 import { useEpicsQueryKey, useEpicsSearchParams } from "./util";
 import { useDeleteEpic, useEpics } from "utils/epic";
 import { List, Button } from "antd";
