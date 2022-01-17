@@ -57,6 +57,7 @@
     "@craco/craco": "^6.4.0",
     "@emotion/react": "^11.7.0",
     "@emotion/styled": "^11.6.0",
+    "@testing-library/react-hooks": "^7.0.2",
     "@types/qs": "^6.9.7",
     "@types/react-beautiful-dnd": "^13.1.2",
     "@welldone-software/why-did-you-render": "^6.2.3",
@@ -66,6 +67,7 @@
     "husky": "^7.0.4",
     "jira-dev-tool": "^1.6.59",
     "lint-staged": "^11.2.6",
+    "msw": "^0.36.4",
     "prettier": "2.4.1",
     "qs": "^6.10.1",
     "react-beautiful-dnd": "^13.1.0"
