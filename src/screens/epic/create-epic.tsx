@@ -3,14 +3,13 @@ import { Drawer } from "antd";
 import { DrawerProps } from "antd/es/drawer";
 import { useAddEpics } from "utils/epic";
 import { useEpicsQueryKey } from "./util";
-import { useForm } from "antd/es/form/Form";
 import { ErrorBox } from "components/lib";
 import { Form, Spin, Input, Button } from "antd";
 import { Container } from "screens/Kanban/kanban-column";
 import { useProjectIdInUrl } from "screens/Kanban/util";
 export const CreateEpic = (props: Pick<DrawerProps, "visible"> & { onClose: () => void }) => {
   const { mutate: addEpic, isLoading, error } = useAddEpics(useEpicsQueryKey());
-  const [form] = useForm();
+  const [form] = Form.useForm();
   const projectId = useProjectIdInUrl();
   const onFinish = async (values: any) => {
     await addEpic({ ...values, projectId });

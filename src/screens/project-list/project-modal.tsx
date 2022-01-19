@@ -3,12 +3,11 @@ import { Drawer, Button, Spin, Form, Input } from "antd";
 import { useProjectModal, useProjectQueryKey } from "./util";
 import { UserSelect } from "components/user-select";
 import { useEditProject, useAddProject } from "utils/project";
-import { useForm } from "antd/es/form/Form";
 import { ErrorBox } from "components/lib";
 import styled from "@emotion/styled";
 export const ProjectModal = () => {
   const { projectCreate, close, editingProject, isLoading } = useProjectModal();
-  const [form] = useForm(); // form可以控制下面的Form
+  const [form] = Form.useForm(); // form可以控制下面的Form
   const useMutateProject = editingProject ? useEditProject : useAddProject;
   // mutate和mutateAsync,async能控制请求完成再做 逻辑
   const { mutateAsync, error, isLoading: mutateLoading } = useMutateProject(useProjectQueryKey());

@@ -2,11 +2,12 @@ import { useAddConfig, useDeleteConfig, useEditConfig } from "./use-optimistic-o
 import { Project } from "types/Project";
 import { useHttp } from "utils/http";
 import { QueryKey, useMutation, useQuery } from "react-query";
+import { cleanObject } from "utils";
 export const useProjects = (param?: Partial<Project>) => {
   const client = useHttp();
 
   // param变化时,useQuery自动触发
-  return useQuery<Project[], Error>(["projects", param], () => client("projects", { data: param }));
+  return useQuery<Project[], Error>(["projects", cleanObject(param)], () => client("projects", { data: param }));
 };
 
 export const useEditProject = (queryKey: QueryKey) => {

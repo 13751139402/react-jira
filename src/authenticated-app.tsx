@@ -7,7 +7,6 @@ import { ProjectScreen } from "screens/project";
 import { Row } from "./components/lib";
 import { Dropdown, Menu, Button } from "antd";
 import { Route, Routes } from "react-router";
-import { BrowserRouter as Router } from "react-router-dom";
 import { ProjectModal } from "screens/project-list/project-modal";
 import { resetRoute } from "utils";
 import { ProjectPopover } from "components/project.popover";
@@ -25,20 +24,18 @@ import { UserPopover } from "components/user-popover";
  */
 export default function AuthenticatedApp() {
   return (
-    <Router>
-      <Container>
-        <PageHeader />
-        <Main>
-          <Routes>
-            <Route path={"/"} element={<ProjectListScreen />} />
-            <Route path={"/projects/:projectId/*"} element={<ProjectScreen />} />
-          </Routes>
-          {/* 默认路由 */}
-          {/* <Navigate to={"/projects"} /> */}
-          <ProjectModal />
-        </Main>
-      </Container>
-    </Router>
+    <Container>
+      <PageHeader />
+      <Main>
+        <Routes>
+          <Route path={"/"} element={<ProjectListScreen />} />
+          <Route path={"/projects/:projectId/*"} element={<ProjectScreen />} />
+        </Routes>
+        {/* 默认路由 */}
+        {/* <Navigate to={"/projects"} /> */}
+        <ProjectModal />
+      </Main>
+    </Container>
   );
 }
 const PageHeader = () => {
